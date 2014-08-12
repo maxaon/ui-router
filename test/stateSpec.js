@@ -161,7 +161,7 @@ describe('state', function () {
       });
       $q.flush();
       expect($location.search()).toEqual({term: 'hello'});
-      expect(called).toBeFalsy();        
+      expect(called).toBeFalsy();
     }));
 
     it('ignores non-applicable state parameters', inject(function ($state, $q) {
@@ -653,7 +653,7 @@ describe('state', function () {
       expect($state.href("root", {}, {inherit:false})).toEqual("#/root");
       expect($state.href("root", {}, {inherit:true})).toEqual("#/root?param1=1");
     }));
-    
+
     it('generates absolute url when absolute is true', inject(function ($state) {
       expect($state.href("about.sidebar", null, { absolute: true })).toEqual("http://server/#/about");
       locationProvider.html5Mode(true);
@@ -805,15 +805,14 @@ describe('state', function () {
         expect($state.current.name).toBe("about");
       }));
     });
-
     it('should revert to last known working url on state change failure', inject(function ($state, $rootScope, $location, $q) {
       $state.transitionTo("about");
       $q.flush();
 
       $location.path("/resolve-fail");
       $rootScope.$broadcast("$locationChangeSuccess");
-      $rootScope.$apply();
 
+      expect($rootScope.$apply).toThrow('Error during transition\n!');
       expect($state.current.name).toBe("about");
     }));
 
@@ -827,7 +826,7 @@ describe('state', function () {
 
       $location.path("/resolve-fail");
       $rootScope.$broadcast("$locationChangeSuccess");
-      $rootScope.$apply();
+      expect($rootScope.$apply).toThrow('Error during transition\n!');
 
       expect($location.path()).toBe("/resolve-fail");
     }));

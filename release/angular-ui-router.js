@@ -1,6 +1,6 @@
 /**
  * State-based routing for AngularJS
- * @version v0.2.10-fix-dev-2014-08-12
+ * @version v0.2.10-fix-dev-2014-08-19
  * @link http://angular-ui.github.com/
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
@@ -164,6 +164,12 @@ function filterByKeys(keys, values) {
 function createExceptionHandler(prefix) {
   return function (ex) {
     if (ex instanceof Error) {
+      if ([ // Skip router internal rejects
+        'transition superseded',
+        'transition prevented',
+        'transition aborted',
+        'transition failed'].indexOf(ex.message) > -1)
+        return;
       ex.message = prefix + "\n" + ex.message;
       throw ex;
     }

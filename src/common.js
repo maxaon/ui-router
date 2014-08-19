@@ -151,6 +151,12 @@ function filterByKeys(keys, values) {
 function createExceptionHandler(prefix) {
   return function (ex) {
     if (ex instanceof Error) {
+      if ([ // Skip router internal rejects
+        'transition superseded',
+        'transition prevented',
+        'transition aborted',
+        'transition failed'].indexOf(ex.message) > -1)
+        return;
       ex.message = prefix + "\n" + ex.message;
       throw ex;
     }
